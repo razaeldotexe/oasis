@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oasis Embed Sender</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #313338;
+            --sidebar: #2b2d31;
+            --embed-bg: #1e1f22;
+            --text-muted: #b5bac1;
+            --accent: #5865f2;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            width: 100%;
+        }
+        .editor {
+            background: var(--sidebar);
+            padding: 2rem;
+            border-right: 1px solid #1e1f22;
+            overflow-y: auto;
+        }
+        .preview-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .discord-embed {
+            background: var(--embed-bg);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 520px;
+        }
+        .embed-title { font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; }
+        .embed-desc { font-size: 0.9rem; color: #dbdee1; line-height: 1.3; }
+        .embed-image { width: 100%; border-radius: 4px; margin-top: 0.5rem; display: none; }
+        
+        input, textarea {
+            width: 100%;
+            background: #1e1f22;
+            border: 1px solid #1e1f22;
+            color: white;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+        button {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: #4752c4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="editor">
+            <h2 style="margin-top:0">Embed Sender</h2>
+            <label>Webhook URL</label>
+            <input type="text" id="webhook" placeholder="https://discord.com/api/webhooks/..." value="{{ default_webhook }}">
+            
+            <label>Title</label>
+            <input type="text" id="title" placeholder="Masukkan judul..." oninput="updatePreview()">
+            
+            <label>Description</label>
+            <textarea id="desc" rows="5" placeholder="Masukkan pesan..." oninput="updatePreview()"></textarea>
+            
+            <label>Color</label>
+            <input type="color" id="color" value="#5865f2" oninput="updatePreview()">
+            
+            <label>Image URL</label>
+            <input type="text" id="image_url" placeholder="https://..." oninput="updatePreview()">
+            
+            <button onclick="sendEmbed()">Kirim ke Discord</button>
+            <p id="status" style="margin-top:1rem; font-size:0.8rem"></p>
+        </div>
+        <div class="preview-area">
+            <div class="discord-embed" id="preview-box">
+                <div class="embed-title" id="p-title">Judul Embed</div>
+                <div class="embed-desc" id="p-desc">Deskripsi pesan akan muncul di sini secara realtime.</div>
+                <img id="p-img" class="embed-image">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const title = document.getElementById('title').value || "Judul Embed";
+            const desc = document.getElementById('desc').value || "Deskripsi pesan akan muncul di sini secara realtime.";
+            const color = document.getElementById('color').value;
+            const imgUrl = document.getElementById('image_url').value;
+
+            document.getElementById('p-title').innerText = title;
+            document.getElementById('p-desc').innerText = desc;
+            document.getElementById('preview-box').style.borderLeftColor = color;
+            
+            const img = document.getElementById('p-img');
+            if(imgUrl) {
+                img.src = imgUrl;
+                img.style.display = 'block';
+            } else {
+                img.style.display = 'none';
+            }
+        }
+
+        async function sendEmbed() {
+            const btn = document.querySelector('button');
+            const status = document.getElementById('status');
+            btn.disabled = true;
+            status.innerText = "Mengirim...";
+
+            const payload = {
+                webhook_url: document.getElementById('webhook').value,
+                title: document.getElementById('title').value,
+                description: document.getElementById('desc').value,
+                color: document.getElementById('color').value,
+                image_url: document.getElementById('image_url').value
+            };
+
+            try {
+                const res = await fetch('/send', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                status.innerText = result.message;
+                status.style.color = result.success ? '#23a559' : '#f23f43';
+            } catch(e) {
+                status.innerText = "Error koneksi ke server.";
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
