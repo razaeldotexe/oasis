@@ -118,6 +118,7 @@ venv.bak/
 # Project specific
 cookies.txt
 downloads/
+data/
 
 # Spyder project settings
 .spyderproject

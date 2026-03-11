@@ -9,6 +9,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 - **Web Embed Sender**: Antarmuka web modern untuk mengirim rich embed via Webhook.
 - **Hot Reload**: Restart otomatis saat kode berubah.
 - **Best Phone**: Rekomendasi smartphone terbaik real-time via `/best-phone` dan manual refresh via `/phone-refresh`.
+- **TribunNews Auto-Poster**: Secara konstan mengecek API dan mem-posting berita terkini ke channel khusus secara otomatis!
 - **Auto-Delete Filter**: Sistem filter pesan otomatis untuk channel `#source-code` dan `#meme` guna menjaga relevansi konten.
 - **Advanced Logging**: Log berwarna di terminal dan tersimpan di folder `logs/`.
 
@@ -29,6 +30,9 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
    DISCORD_WEBHOOK_URL=your_webhook_url
    FLASK_SECRET_KEY=generate_a_random_string
    BESTPHONE_API_KEY=your_phone_api_key
+   NEWS_CHANNEL_ID=your_news_channel_id
+   NEWS_INTERVAL_MINUTES=15
+   MAX_NEWS_PER_BATCH=5
    ```
 
 3. **YouTube Cookies (Opsional)**:
