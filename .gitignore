@@ -119,6 +119,8 @@ venv.bak/
 cookies.txt
 downloads/
 data/
+logs/
+.gemini/
 
 # Spyder project settings
 .spyderproject

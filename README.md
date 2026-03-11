@@ -1,6 +1,6 @@
 # 🏝️ Oasis Discord Bot & Web Sender
 
-Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot Reload, YouTube Thumbnail Downloader, dan Pengirim Embed berbasis Web.
+Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot Reload, YouTube Thumbnail Downloader, GitHub Projects Embed, Version Manager, dan Pengirim Embed berbasis Web.
 
 ## ✨ Fitur Utama
 - **Discord Bot**: Slash commands (/ping, /timeout, /ban, dll).
@@ -13,6 +13,8 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 - **Best Phone**: Rekomendasi smartphone terbaik real-time via `/best-phone` dan manual refresh via `/phone-refresh`.
 - **TribunNews Auto-Poster**: Secara konstan mengecek API dan mem-posting berita terkini ke channel khusus secara otomatis!
 - **Auto-Delete Filter**: Sistem filter pesan otomatis untuk channel `#source-code` dan `#meme` guna menjaga relevansi konten.
+- **GitHub Projects Embed**: Menampilkan daftar repositori GitHub publik sebagai embed di channel `#our-projects` dengan auto-update setiap 10 menit. Warna embed mengikuti bahasa pemrograman dominan.
+- **Version Manager**: Tracking versi bot via `version.json`, bump semver (patch/minor/major), dan push release ke GitHub langsung dari Discord.
 - **Advanced Logging**: Log berwarna di terminal dan tersimpan di folder `logs/`.
 
 ## 🚀 Persiapan & Instalasi
@@ -45,6 +47,22 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
    - **Bot Utama**: `python main.py`
    - **Web Sender**: `python web_sender.py` (Buka http://localhost:5000)
 
+## 📦 Slash Commands
+
+| Command | Deskripsi |
+|---------|-----------|
+| `/ping` | Cek latensi bot |
+| `/echo` | Ulangi pesan |
+| `/setup ghp` | Kirim daftar proyek GitHub ke channel our-projects |
+| `/version` | Lihat versi bot saat ini |
+| `/release [patch\|minor\|major]` | Bump versi dan push ke GitHub |
+| `/best-phone` | Rekomendasi Top 5 smartphone |
+| `/timeout` | Timeout user |
+| `/kick` | Kick user |
+| `/ban` | Ban user |
+| `/lock` | Kunci channel |
+| `/purge` | Hapus pesan massal |
+
 ## 🚀 Deployment (Production)
 
 ### Opsi A: Docker (Direkomendasikan)
@@ -61,12 +79,13 @@ docker-compose up -d --build
 Tersedia script `./deploy.sh` untuk melakukan penarikan kode dan restart service secara otomatis di Linux VPS.
 
 ## 📁 Struktur Folder
-- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube, Filter, Phone, Context Menus).
-- `core/`: Inti logika sistem (Bot class, Logger, Sender logic).
+- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube, Filter, Phone, Context Menus, GitHub Projects, Version).
+- `core/`: Inti logika sistem (Bot class, Logger, Sender logic, Version handler).
 - `services/`: Layanan eksternal (YouTube Downloader).
-- `utils/`: Utilitas pembantu (URL Parser).
+- `utils/`: Utilitas pembantu (URL Parser, Language Colors).
 - `templates/`: File HTML untuk Web Sender.
 - `logs/`: Riwayat aktivitas sistem.
+- `version.json`: Metadata versi proyek.
 
 ## 🛡️ Keamanan
 - Web Sender dilengkapi dengan **Rate Limiter** untuk mencegah spam.
