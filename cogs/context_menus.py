@@ -6,50 +6,14 @@ import os
 class ContextMenuCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        
-        # Registrasi Context Menus
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Lihat Avatar HD",
-                callback=self.avatar_hd,
-            )
-        )
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Member Info",
-                callback=self.member_info,
-            )
-        )
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Laporkan User",
-                callback=self.report_user,
-            )
-        )
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Laporkan Pesan",
-                callback=self.report_message,
-            )
-        )
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Translate Message",
-                callback=self.translate_message,
-            )
-        )
-        self.bot.tree.add_command(
-            app_commands.ContextMenu(
-                name="Quote Message",
-                callback=self.quote_message,
-            )
-        )
 
+    @app_commands.context_menu(name="Lihat Avatar HD")
     async def avatar_hd(self, interaction: discord.Interaction, member: discord.Member):
         embed = discord.Embed(title=f"Avatar {member.name}", color=discord.Color.blurple())
         embed.set_image(url=member.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @app_commands.context_menu(name="Member Info")
     async def member_info(self, interaction: discord.Interaction, member: discord.Member):
         embed = discord.Embed(
             title=f"Informasi Member: {member.name}", 
@@ -64,6 +28,7 @@ class ContextMenuCog(commands.Cog):
         
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @app_commands.context_menu(name="Laporkan User")
     async def report_user(self, interaction: discord.Interaction, member: discord.Member):
         await interaction.response.send_modal(UserReportModal(member))
 
@@ -101,9 +66,11 @@ class UserReportModal(discord.ui.Modal, title='Laporkan Pengguna'):
             except Exception as e:
                 print(f"Gagal mengirim log report: {e}")
 
+    @app_commands.context_menu(name="Laporkan Pesan")
     async def report_message(self, interaction: discord.Interaction, message: discord.Message):
         await interaction.response.send_modal(MessageReportModal(message))
 
+    @app_commands.context_menu(name="Translate Message")
     async def translate_message(self, interaction: discord.Interaction, message: discord.Message):
         if not message.content:
             await interaction.response.send_message("❌ Pesan ini tidak berisi teks yang bisa diterjemahkan.", ephemeral=True)
@@ -123,6 +90,7 @@ class UserReportModal(discord.ui.Modal, title='Laporkan Pengguna'):
         except Exception as e:
             await interaction.followup.send(f"❌ Terjadi kesalahan saat menerjemahkan: {e}")
 
+    @app_commands.context_menu(name="Quote Message")
     async def quote_message(self, interaction: discord.Interaction, message: discord.Message):
         content = message.content or "*[Pesan tidak memiliki teks, mungkin hanya berisi attachment]*"
         embed = discord.Embed(description=content, color=discord.Color.brand_green(), timestamp=message.created_at)
