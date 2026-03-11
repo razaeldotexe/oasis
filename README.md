@@ -8,6 +8,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 - **Gemini AI**: Integrasi Google Gemini 1.5-flash (@oasis hello).
 - **Web Embed Sender**: Antarmuka web modern untuk mengirim rich embed via Webhook.
 - **Hot Reload**: Restart otomatis saat kode berubah.
+- **Auto-Delete Filter**: Sistem filter pesan otomatis untuk channel `#source-code` dan `#meme` guna menjaga relevansi konten.
 - **Advanced Logging**: Log berwarna di terminal dan tersimpan di folder `logs/`.
 
 ## 🚀 Persiapan & Instalasi
@@ -22,6 +23,8 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
    ```env
    DISCORD_TOKEN=your_bot_token
    GEMINI_API_KEY=your_gemini_key
+   SOURCE_CODE_CHANNEL_ID=your_source_code_channel_id
+   MEME_CHANNEL_ID=your_meme_channel_id
    DISCORD_WEBHOOK_URL=your_webhook_url
    FLASK_SECRET_KEY=generate_a_random_string
    ```
@@ -34,7 +37,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
    - **Web Sender**: `python web_sender.py` (Buka http://localhost:5000)
 
 ## 📁 Struktur Folder
-- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube).
+- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube, Filter).
 - `core/`: Inti logika sistem (Bot class, Logger, Sender logic).
 - `services/`: Layanan eksternal (YouTube Downloader).
 - `utils/`: Utilitas pembantu (URL Parser).
