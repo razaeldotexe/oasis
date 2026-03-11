@@ -13,15 +13,20 @@ class OasisBot(commands.Bot):
         # Memuat Cogs secara otomatis
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
-                try:
-                    await self.load_extension(f'cogs.{filename[:-3]}')
-                    logger.info(f'Loaded extension: {filename}')
-                except Exception as e:
-                    logger.error(f'Failed to load extension {filename}: {e}')
-        
-        await self.tree.sync()
-        logger.info(f"Slash commands synced for {self.user}")
+                cog_name = f'cogs.{filename[:-3]}'
+                if cog_name not in self.extensions:
+                    try:
+                        await self.load_extension(cog_name)
+                        logger.info(f'Loaded extension: {filename}')
+                    except Exception as e:
+                        logger.error(f'Failed to load extension {filename}: {e}')
 
     async def on_ready(self):
-        logger.info(f'Bot logged in as {self.user} (ID: {self.user.id})')
-        logger.info('Sistem siap!')
+        try:
+            await self.tree.sync()
+            logger.info(f"Slash commands synced for {self.user}")
+        except Exception as e:
+            logger.error(f"Failed to sync commands: {e}")
+            
+        logger.info(f"Bot logged in as {self.user} (ID: {self.user.id})")
+        logger.info("Sistem siap!")
