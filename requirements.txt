@@ -5,3 +5,6 @@ watchdog
 colorlog
 flask
 requests
+yt-dlp
+httpx
+click

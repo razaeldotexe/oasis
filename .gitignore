@@ -115,6 +115,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Project specific
+cookies.txt
+downloads/
+
 # Spyder project settings
 .spyderproject
 .spyproject
