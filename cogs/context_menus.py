@@ -7,30 +7,31 @@ class ContextMenuCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.context_menu(name="Lihat Avatar HD")
-    async def avatar_hd(self, interaction: discord.Interaction, member: discord.Member):
-        embed = discord.Embed(title=f"Avatar {member.name}", color=discord.Color.blurple())
-        embed.set_image(url=member.display_avatar.url)
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+# --- Context Menus ---
+@app_commands.context_menu(name="Lihat Avatar HD")
+async def avatar_hd(interaction: discord.Interaction, member: discord.Member):
+    embed = discord.Embed(title=f"Avatar {member.name}", color=discord.Color.blurple())
+    embed.set_image(url=member.display_avatar.url)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.context_menu(name="Member Info")
-    async def member_info(self, interaction: discord.Interaction, member: discord.Member):
-        embed = discord.Embed(
-            title=f"Informasi Member: {member.name}", 
-            color=member.color if member.color != discord.Color.default() else discord.Color.blue()
-        )
-        embed.set_thumbnail(url=member.display_avatar.url)
-        embed.add_field(name="ID", value=str(member.id), inline=True)
-        embed.add_field(name="Bergabung di Server", value=discord.utils.format_dt(member.joined_at, "R") if member.joined_at else "Tidak diketahui", inline=True)
-        embed.add_field(name="Akun Dibuat", value=discord.utils.format_dt(member.created_at, "R"), inline=False)
-        roles = [role.mention for role in member.roles if role.name != "@everyone"]
-        embed.add_field(name=f"Roles [{len(roles)}]", value=" ".join(roles) if roles else "Tidak ada role", inline=False)
-        
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+@app_commands.context_menu(name="Member Info")
+async def member_info(interaction: discord.Interaction, member: discord.Member):
+    embed = discord.Embed(
+        title=f"Informasi Member: {member.name}", 
+        color=member.color if member.color != discord.Color.default() else discord.Color.blue()
+    )
+    embed.set_thumbnail(url=member.display_avatar.url)
+    embed.add_field(name="ID", value=str(member.id), inline=True)
+    embed.add_field(name="Bergabung di Server", value=discord.utils.format_dt(member.joined_at, "R") if member.joined_at else "Tidak diketahui", inline=True)
+    embed.add_field(name="Akun Dibuat", value=discord.utils.format_dt(member.created_at, "R"), inline=False)
+    roles = [role.mention for role in member.roles if role.name != "@everyone"]
+    embed.add_field(name=f"Roles [{len(roles)}]", value=" ".join(roles) if roles else "Tidak ada role", inline=False)
+    
+    await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.context_menu(name="Laporkan User")
-    async def report_user(self, interaction: discord.Interaction, member: discord.Member):
-        await interaction.response.send_modal(UserReportModal(member))
+@app_commands.context_menu(name="Laporkan User")
+async def report_user(interaction: discord.Interaction, member: discord.Member):
+    await interaction.response.send_modal(UserReportModal(member))
 
 class UserReportModal(discord.ui.Modal, title='Laporkan Pengguna'):
     def __init__(self, member: discord.Member):
@@ -66,39 +67,39 @@ class UserReportModal(discord.ui.Modal, title='Laporkan Pengguna'):
             except Exception as e:
                 print(f"Gagal mengirim log report: {e}")
 
-    @app_commands.context_menu(name="Laporkan Pesan")
-    async def report_message(self, interaction: discord.Interaction, message: discord.Message):
-        await interaction.response.send_modal(MessageReportModal(message))
+@app_commands.context_menu(name="Laporkan Pesan")
+async def report_message(interaction: discord.Interaction, message: discord.Message):
+    await interaction.response.send_modal(MessageReportModal(message))
 
-    @app_commands.context_menu(name="Translate Message")
-    async def translate_message(self, interaction: discord.Interaction, message: discord.Message):
-        if not message.content:
-            await interaction.response.send_message("❌ Pesan ini tidak berisi teks yang bisa diterjemahkan.", ephemeral=True)
-            return
-            
-        await interaction.response.defer(ephemeral=True)
-        try:
-            from googletrans import Translator
-            translator = Translator()
-            # Menerjemahkan otomatis dengan mendeteksi bahasa asal dan target ke bahasa lokal server/Indonesia
-            result = translator.translate(message.content, dest='id')
-            
-            embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result.text, color=discord.Color.green())
-            embed.set_footer(text=f"Asli: {result.src.upper()} | Diterjemahkan dari pesan {message.author.name}")
-            
-            await interaction.followup.send(embed=embed)
-        except Exception as e:
-            await interaction.followup.send(f"❌ Terjadi kesalahan saat menerjemahkan: {e}")
-
-    @app_commands.context_menu(name="Quote Message")
-    async def quote_message(self, interaction: discord.Interaction, message: discord.Message):
-        content = message.content or "*[Pesan tidak memiliki teks, mungkin hanya berisi attachment]*"
-        embed = discord.Embed(description=content, color=discord.Color.brand_green(), timestamp=message.created_at)
-        embed.set_author(name=message.author.display_name, icon_url=message.author.display_avatar.url)
-        embed.add_field(name="Sumber", value=f"[Loncat ke pesan]({message.jump_url})")
+@app_commands.context_menu(name="Translate Message")
+async def translate_message(interaction: discord.Interaction, message: discord.Message):
+    if not message.content:
+        await interaction.response.send_message("❌ Pesan ini tidak berisi teks yang bisa diterjemahkan.", ephemeral=True)
+        return
         
-        # Kirim kutipan ke channel saat ini
-        await interaction.response.send_message(f"💬 Diutip oleh {interaction.user.mention}", embed=embed)
+    await interaction.response.defer(ephemeral=True)
+    try:
+        from googletrans import Translator
+        translator = Translator()
+        # Menerjemahkan otomatis dengan mendeteksi bahasa asal dan target ke bahasa lokal server/Indonesia
+        result = translator.translate(message.content, dest='id')
+        
+        embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result.text, color=discord.Color.green())
+        embed.set_footer(text=f"Asli: {result.src.upper()} | Diterjemahkan dari pesan {message.author.name}")
+        
+        await interaction.followup.send(embed=embed)
+    except Exception as e:
+        await interaction.followup.send(f"❌ Terjadi kesalahan saat menerjemahkan: {e}")
+
+@app_commands.context_menu(name="Quote Message")
+async def quote_message(interaction: discord.Interaction, message: discord.Message):
+    content = message.content or "*[Pesan tidak memiliki teks, mungkin hanya berisi attachment]*"
+    embed = discord.Embed(description=content, color=discord.Color.brand_green(), timestamp=message.created_at)
+    embed.set_author(name=message.author.display_name, icon_url=message.author.display_avatar.url)
+    embed.add_field(name="Sumber", value=f"[Loncat ke pesan]({message.jump_url})")
+    
+    # Kirim kutipan ke channel saat ini
+    await interaction.response.send_message(f"💬 Diutip oleh {interaction.user.mention}", embed=embed)
 
 class MessageReportModal(discord.ui.Modal, title='Laporkan Pesan'):
     def __init__(self, message: discord.Message):
@@ -138,3 +139,11 @@ class MessageReportModal(discord.ui.Modal, title='Laporkan Pesan'):
 
 async def setup(bot):
     await bot.add_cog(ContextMenuCog(bot))
+    
+    # Daftarkan secara global
+    bot.tree.add_command(avatar_hd)
+    bot.tree.add_command(member_info)
+    bot.tree.add_command(report_user)
+    bot.tree.add_command(report_message)
+    bot.tree.add_command(translate_message)
+    bot.tree.add_command(quote_message)
