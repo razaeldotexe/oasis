@@ -4,6 +4,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 
 ## ✨ Fitur Utama
 - **Discord Bot**: Slash commands (/ping, /timeout, /ban, dll).
+- **Automod**: Filter cerdas anti-spam, anti-link, anti-badwords, anti-mention, dan anti-caps per server yang dapat dikonfigurasi via UI Discord.
 - **Discord Context Menus**: Fitur klik kanan pada User/Pesan (Lihat Avatar HD, Translate Text, Member Info & Quote).
 - **Moderation & Report**: Pembuatan form pop-up modal untuk melaporkan pengguna dan pesan.
 - **YT Thumbnail**: Unduh thumbnail YouTube/YouTube Music langsung ke DM user.
@@ -63,6 +64,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 | `/ban` | Ban user |
 | `/lock` | Kunci channel |
 | `/purge` | Hapus pesan massal |
+| `/automod` | Menu untuk konfigurasi sistem automod (spam/link/caps) |
 
 ## 🚀 Deployment (Production)
 
