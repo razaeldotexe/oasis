@@ -10,7 +10,11 @@ class PhoneCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.api_key = os.getenv('BESTPHONE_API_KEY')
+<<<<<<< Updated upstream
         self.api_url = "http://38.49.212.111:1009/api/v1/phones/ranking"
+=======
+        self.api_url = "http://127.0.0.1:3000/api/v1/phones/ranking"
+>>>>>>> Stashed changes
 
     def create_phone_embed(self, phone: dict, last_updated: str):
         """Membangun Discord Embed untuk satu smartphone."""
