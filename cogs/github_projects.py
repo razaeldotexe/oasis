@@ -275,6 +275,54 @@ class GitHubProjects(commands.Cog):
         # Hapus pesan sementara
         await interaction.delete_original_response()
 
+    @setup_group.command(
+        name="voice",
+        description="Setup otomatis kategori dan master channel untuk fitur Auto-Voice."
+    )
+    async def voice_cmd(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        try:
+            guild = interaction.guild
+            auto_voice_cog = self.bot.get_cog("AutoVoice")
+            
+            if not auto_voice_cog:
+                await interaction.followup.send("❌ Cog AutoVoice tidak ditemukan. Pastikan modul voice dimuat.")
+                return
+            
+            # Cek jika sudah ada
+            category = guild.get_channel(auto_voice_cog.category_id) if auto_voice_cog.category_id else None
+            if not category:
+                category = await guild.create_category("🔊 Auto Voice Channels")
+                
+            master_channel = guild.get_channel(auto_voice_cog.master_channel_id) if auto_voice_cog.master_channel_id else None
+            if not master_channel:
+                master_channel = await guild.create_voice_channel(
+                    name="➕ Buat Room",
+                    category=category
+                )
+
+            # Simpan lewat fungsi di cog auto_voice
+            auto_voice_cog.setup_auto_voice(guild, category.id, master_channel.id)
+
+            embed = discord.Embed(
+                title="✅ Setup Auto-Voice Berhasil",
+                description="Kategori dan master channel telah dibuat dan siap digunakan.",
+                color=Oasis.SUCCESS
+            )
+            embed.add_field(name="Kategori", value=category.name, inline=False)
+            embed.add_field(name="Master Channel", value=master_channel.mention, inline=False)
+            embed.set_footer(text="Join ke channel tersebut untuk langsung membuat private room.")
+
+            await interaction.followup.send(embed=embed, ephemeral=True)
+
+        except discord.Forbidden:
+            await interaction.followup.send("❌ **Gagal:** Bot tidak memiliki izin administratif untuk membuat channel atau kategori.", ephemeral=True)
+        except Exception as e:
+            from core.logger_config import logger
+            logger.error(f"Error /setup voice: {e}")
+            await interaction.followup.send(f"❌ **Error:** Terjadi kesalahan saat mensetup konfigurasi voice.", ephemeral=True)
+
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(GitHubProjects(bot))

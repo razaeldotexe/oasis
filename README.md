@@ -13,6 +13,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 - **Best Phone**: Rekomendasi smartphone terbaik real-time via `/best-phone` dan manual refresh via `/phone-refresh`.
 - **TribunNews Auto-Poster**: Secara konstan mengecek API dan mem-posting berita terkini ke channel khusus secara otomatis!
 - **Auto-Delete Filter**: Sistem filter pesan otomatis untuk channel `#source-code` dan `#meme` guna menjaga relevansi konten.
+- **Auto-Voice Channel**: Pembuatan Voice Channel sementara secara otomatis saat user bergabung ke master channel, dan channel akan otomatis terhapus jika sudah kosong.
 - **GitHub Projects Embed**: Menampilkan daftar repositori GitHub publik sebagai embed di channel `#our-projects` dengan auto-update setiap 10 menit. Warna embed mengikuti bahasa pemrograman dominan.
 - **Version Manager**: Tracking versi bot via `version.json`, bump semver (patch/minor/major), dan push release ke GitHub langsung dari Discord.
 - **Advanced Logging**: Log berwarna di terminal dan tersimpan di folder `logs/`.
