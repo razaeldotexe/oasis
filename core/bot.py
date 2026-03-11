@@ -22,11 +22,15 @@ class OasisBot(commands.Bot):
                         logger.error(f'Failed to load extension {filename}: {e}')
 
     async def on_ready(self):
-        try:
-            await self.tree.sync()
-            logger.info(f"Slash commands synced for {self.user}")
-        except Exception as e:
-            logger.error(f"Failed to sync commands: {e}")
-            
+        # Sync slash commands ke setiap guild (instan, tidak perlu tunggu 1 jam)
+        for guild in self.guilds:
+            try:
+                self.tree.copy_global_to(guild=guild)
+                synced = await self.tree.sync(guild=guild)
+                logger.info(f"Synced {len(synced)} commands to {guild.name} ({guild.id})")
+            except Exception as e:
+                logger.error(f"Failed to sync commands to {guild.name}: {e}")
+
         logger.info(f"Bot logged in as {self.user} (ID: {self.user.id})")
         logger.info("Sistem siap!")
+
