@@ -1,6 +1,7 @@
 # core/version.py
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -52,38 +53,60 @@ def bump(part: str = "patch") -> str:
     return new_version
 
 
+def _run_git(*args) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["git", *args],
+        capture_output=True, text=True, cwd=VERSION_FILE.parent
+    )
+
+
 def git_push_version(version: str, message: str = None) -> tuple[bool, str]:
     """
-    Commit version.json dan push ke GitHub.
-    Returns (success, output_or_error).
+    Commit version.json dan push ke GitHub via Personal Access Token.
+    Token diambil dari env var GITHUB_TOKEN.
     """
     msg = message or f"v{version}"
+    token = os.getenv("GITHUB_TOKEN")
+
+    if not token:
+        return False, "GITHUB_TOKEN tidak ditemukan di .env"
 
     try:
-        cmds = [
-            ["git", "add", "version.json"],
-            ["git", "commit", "-m", msg],
-            ["git", "tag", f"v{version}"],
-            ["git", "push"],
-            ["git", "push", "--tags"],
-        ]
+        # Ambil repo info dari version.json
+        info = _read()
+        repo = info.get("repository", "")
+        if not repo:
+            return False, "Repository tidak ditemukan di version.json"
 
-        output_lines = []
-        for cmd in cmds:
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, cwd=VERSION_FILE.parent
-            )
-            if result.stdout:
-                output_lines.append(result.stdout.strip())
-            if result.returncode != 0 and result.stderr:
-                # git push output sering ke stderr meskipun sukses
-                if "error" in result.stderr.lower() or "fatal" in result.stderr.lower():
-                    return False, result.stderr.strip()
-                output_lines.append(result.stderr.strip())
+        auth_url = f"https://{token}@github.com/{repo}.git"
 
-        return True, "\n".join(output_lines)
+        # Commit
+        _run_git("add", "version.json")
+        result = _run_git("commit", "-m", msg)
+        if result.returncode != 0 and "nothing to commit" in result.stdout:
+            return False, "Tidak ada perubahan untuk di-commit."
+
+        # Tag
+        _run_git("tag", f"v{version}")
+
+        # Push dengan token
+        result = _run_git("push", auth_url, "HEAD")
+        if result.returncode != 0:
+            err = result.stderr.strip().replace(token, "***")
+            if "fatal" in err.lower() or "error" in err.lower():
+                return False, err
+
+        # Push tags
+        result = _run_git("push", auth_url, "--tags")
+        if result.returncode != 0:
+            err = result.stderr.strip().replace(token, "***")
+            if "fatal" in err.lower() or "error" in err.lower():
+                return False, err
+
+        return True, f"Pushed v{version} to {repo}"
 
     except FileNotFoundError:
         return False, "Git tidak ditemukan. Pastikan git terinstall."
     except Exception as e:
         return False, str(e)
+
