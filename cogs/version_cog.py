@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import asyncio
+from utils.colors import Oasis
 from core.version import get_version, get_info, bump, git_push_version
 
 
@@ -22,7 +23,7 @@ class VersionCog(commands.Cog):
         embed = discord.Embed(
             title=info.get("name", "Bot"),
             description=f"```v{info['version']}```",
-            color=0x2B2D31,
+            color=Oasis.PRIMARY,
         )
         embed.add_field(
             name="Repository",
@@ -70,7 +71,7 @@ class VersionCog(commands.Cog):
             embed = discord.Embed(
                 title="✅ Release berhasil",
                 description=f"`v{old_version}` → `v{new_version}`",
-                color=0x2ECC71,
+                color=Oasis.SUCCESS,
             )
             embed.add_field(name="Commit", value=f"```{commit_msg}```", inline=False)
             embed.add_field(name="Tag", value=f"`v{new_version}`", inline=True)
@@ -79,7 +80,7 @@ class VersionCog(commands.Cog):
             embed = discord.Embed(
                 title="❌ Release gagal",
                 description=f"```{output}```",
-                color=0xE74C3C,
+                color=Oasis.ERROR,
             )
             await interaction.edit_original_response(content=None, embed=embed)
 

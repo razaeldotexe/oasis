@@ -4,6 +4,7 @@ from discord.ext import commands
 import datetime
 import re
 from core.logger_config import logger
+from utils.colors import Oasis
 
 def text_to_int(text: str) -> int:
     """Konversi teks angka (Indo/Inggris) ke integer (1-100)."""
@@ -45,7 +46,7 @@ class Moderation(commands.Cog):
         duration = datetime.timedelta(minutes=10)
         try:
             await member.timeout(duration, reason=reason)
-            embed = discord.Embed(title="Timeout", description=f"**{member}** di-timeout.", color=discord.Color.orange())
+            embed = discord.Embed(title="Timeout", description=f"**{member}** di-timeout.", color=Oasis.WARNING)
             await interaction.response.send_message(embed=embed)
         except Exception as e:
             await interaction.response.send_message(f"Error: {e}", ephemeral=True)

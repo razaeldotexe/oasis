@@ -9,6 +9,7 @@ import json
 import os
 from datetime import datetime
 from utils.lang_colors import get_color, format_languages
+from utils.colors import Oasis
 
 GITHUB_USERNAME = "razaeldotexe"
 TARGET_CHANNEL_ID = 1480007576622993482
@@ -84,7 +85,7 @@ class GitHubProjects(commands.Cog):
                 f"[{GITHUB_USERNAME}](https://github.com/{GITHUB_USERNAME})\n"
                 f"── **{count}** repositori ditemukan"
             ),
-            color=0x2B2D31,
+            color=Oasis.PRIMARY,
         )
         embed.set_thumbnail(url=f"https://github.com/{GITHUB_USERNAME}.png")
         embed.set_footer(text="Auto-update setiap 10 menit")

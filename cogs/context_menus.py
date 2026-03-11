@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import os
+from utils.colors import Oasis
 
 class ContextMenuCog(commands.Cog):
     def __init__(self, bot):
@@ -10,7 +11,7 @@ class ContextMenuCog(commands.Cog):
 # --- Context Menus ---
 @app_commands.context_menu(name="Lihat Avatar HD")
 async def avatar_hd(interaction: discord.Interaction, member: discord.Member):
-    embed = discord.Embed(title=f"Avatar {member.name}", color=discord.Color.blurple())
+    embed = discord.Embed(title=f"Avatar {member.name}", color=Oasis.PRIMARY)
     embed.set_image(url=member.display_avatar.url)
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
@@ -18,7 +19,7 @@ async def avatar_hd(interaction: discord.Interaction, member: discord.Member):
 async def member_info(interaction: discord.Interaction, member: discord.Member):
     embed = discord.Embed(
         title=f"Informasi Member: {member.name}", 
-        color=member.color if member.color != discord.Color.default() else discord.Color.blue()
+        color=member.color if member.color != discord.Color.default() else Oasis.SECONDARY
     )
     embed.set_thumbnail(url=member.display_avatar.url)
     embed.add_field(name="ID", value=str(member.id), inline=True)
@@ -59,7 +60,7 @@ class UserReportModal(discord.ui.Modal, title='Laporkan Pengguna'):
             try:
                 channel = interaction.client.get_channel(int(log_channel_id))
                 if channel:
-                    embed = discord.Embed(title="🚨 Laporan Pengguna Baru", color=discord.Color.red(), timestamp=discord.utils.utcnow())
+                    embed = discord.Embed(title="🚨 Laporan Pengguna Baru", color=Oasis.ERROR, timestamp=discord.utils.utcnow())
                     embed.add_field(name="Dilaporkan Oleh", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
                     embed.add_field(name="Pengguna Dilaporkan", value=f"{self.member.mention} ({self.member.id})", inline=False)
                     embed.add_field(name="Alasan", value=self.reason.value, inline=False)
@@ -84,7 +85,7 @@ async def translate_message(interaction: discord.Interaction, message: discord.M
         # Menerjemahkan otomatis dengan mendeteksi bahasa asal dan target ke bahasa lokal server/Indonesia
         result = translator.translate(message.content, dest='id')
         
-        embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result.text, color=discord.Color.green())
+        embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result.text, color=Oasis.SUCCESS)
         embed.set_footer(text=f"Asli: {result.src.upper()} | Diterjemahkan dari pesan {message.author.name}")
         
         await interaction.followup.send(embed=embed)
@@ -94,7 +95,7 @@ async def translate_message(interaction: discord.Interaction, message: discord.M
 @app_commands.context_menu(name="Quote Message")
 async def quote_message(interaction: discord.Interaction, message: discord.Message):
     content = message.content or "*[Pesan tidak memiliki teks, mungkin hanya berisi attachment]*"
-    embed = discord.Embed(description=content, color=discord.Color.brand_green(), timestamp=message.created_at)
+    embed = discord.Embed(description=content, color=Oasis.ACCENT, timestamp=message.created_at)
     embed.set_author(name=message.author.display_name, icon_url=message.author.display_avatar.url)
     embed.add_field(name="Sumber", value=f"[Loncat ke pesan]({message.jump_url})")
     
@@ -126,7 +127,7 @@ class MessageReportModal(discord.ui.Modal, title='Laporkan Pesan'):
             try:
                 channel = interaction.client.get_channel(int(log_channel_id))
                 if channel:
-                    embed = discord.Embed(title="🚩 Laporan Pesan Bermasalah", color=discord.Color.orange(), timestamp=discord.utils.utcnow())
+                    embed = discord.Embed(title="🚩 Laporan Pesan Bermasalah", color=Oasis.WARNING, timestamp=discord.utils.utcnow())
                     embed.add_field(name="Dilaporkan Oleh", value=f"{interaction.user.mention} ({interaction.user.id})", inline=False)
                     embed.add_field(name="Penulis Pesan", value=f"{self.message.author.mention} ({self.message.author.id})", inline=False)
                     embed.add_field(name="Lokasi", value=f"{self.message.channel.mention} - [Loncat ke Pesan]({self.message.jump_url})", inline=False)
