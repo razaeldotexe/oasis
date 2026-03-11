@@ -5,7 +5,7 @@ import os
 import subprocess
 from pathlib import Path
 
-VERSION_FILE = Path(__file__).parent.parent / "version.json"
+VERSION_FILE = Path(__file__).parent.parent.parent / "version.json"
 
 
 def _read() -> dict:

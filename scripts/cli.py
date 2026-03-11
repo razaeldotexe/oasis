@@ -3,6 +3,9 @@ import click
 import httpx
 import os
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
 from utils.url_parser import extract_video_id
 from services.yt_service import get_thumbnail_info
 

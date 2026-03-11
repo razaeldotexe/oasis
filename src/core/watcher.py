@@ -42,7 +42,7 @@ class RestartHandler(FileSystemEventHandler):
 def start_watcher():
     event_handler = RestartHandler()
     observer = Observer()
-    observer.schedule(event_handler, path='.', recursive=True)
+    observer.schedule(event_handler, path='src', recursive=True)
     observer.daemon = True
     observer.start()
     logger.info("Hot Reload Watcher started.")

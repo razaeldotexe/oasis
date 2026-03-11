@@ -6,7 +6,7 @@ colorlog
 flask
 requests
 yt-dlp
-httpx
+httpx>=0.28.0
 click
 aiohttp
-googletrans==4.0.0-rc1
+deep-translator

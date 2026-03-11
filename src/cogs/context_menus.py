@@ -80,13 +80,13 @@ async def translate_message(interaction: discord.Interaction, message: discord.M
         
     await interaction.response.defer(ephemeral=True)
     try:
-        from googletrans import Translator
-        translator = Translator()
+        from deep_translator import GoogleTranslator
+        translator = GoogleTranslator(source='auto', target='id')
         # Menerjemahkan otomatis dengan mendeteksi bahasa asal dan target ke bahasa lokal server/Indonesia
-        result = translator.translate(message.content, dest='id')
+        result_text = translator.translate(message.content)
         
-        embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result.text, color=Oasis.SUCCESS)
-        embed.set_footer(text=f"Asli: {result.src.upper()} | Diterjemahkan dari pesan {message.author.name}")
+        embed = discord.Embed(title="🌐 Hasil Terjemahan (Otomatis -> ID)", description=result_text, color=Oasis.SUCCESS)
+        embed.set_footer(text=f"Diterjemahkan dari pesan {message.author.name}")
         
         await interaction.followup.send(embed=embed)
     except Exception as e:

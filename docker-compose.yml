@@ -3,6 +3,7 @@ version: '3.8'
 services:
   bot:
     build: .
+    command: bash -c "python src/main.py"
     container_name: oasis_bot
     restart: always
     env_file:
