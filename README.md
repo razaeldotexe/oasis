@@ -4,6 +4,8 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
 
 ## ✨ Fitur Utama
 - **Discord Bot**: Slash commands (/ping, /timeout, /ban, dll).
+- **Discord Context Menus**: Fitur klik kanan pada User/Pesan (Lihat Avatar HD, Translate Text, Member Info & Quote).
+- **Moderation & Report**: Pembuatan form pop-up modal untuk melaporkan pengguna dan pesan.
 - **YT Thumbnail**: Unduh thumbnail YouTube/YouTube Music langsung ke DM user.
 - **Gemini AI**: Integrasi Google Gemini 1.5-flash (@oasis hello).
 - **Web Embed Sender**: Antarmuka web modern untuk mengirim rich embed via Webhook.
@@ -27,6 +29,7 @@ Sistem Discord Bot modular yang dilengkapi dengan fitur AI Gemini, Moderasi, Hot
    GEMINI_API_KEY=your_gemini_key
    SOURCE_CODE_CHANNEL_ID=your_source_code_channel_id
    MEME_CHANNEL_ID=your_meme_channel_id
+   REPORT_LOG_CHANNEL_ID=your_admin_log_channel_id
    DISCORD_WEBHOOK_URL=your_webhook_url
    FLASK_SECRET_KEY=generate_a_random_string
    BESTPHONE_API_KEY=your_phone_api_key
@@ -58,7 +61,7 @@ docker-compose up -d --build
 Tersedia script `./deploy.sh` untuk melakukan penarikan kode dan restart service secara otomatis di Linux VPS.
 
 ## 📁 Struktur Folder
-- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube, Filter, Phone).
+- `cogs/`: Modul perintah bot (AI, Moderasi, Utilitas, YouTube, Filter, Phone, Context Menus).
 - `core/`: Inti logika sistem (Bot class, Logger, Sender logic).
 - `services/`: Layanan eksternal (YouTube Downloader).
 - `utils/`: Utilitas pembantu (URL Parser).
