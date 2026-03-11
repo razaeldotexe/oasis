@@ -10,7 +10,7 @@ class PhoneCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.api_key = os.getenv('BESTPHONE_API_KEY')
-        self.api_url = "http://38.49.212.111:2081/api/v1/phones/ranking"
+        self.api_url = "http://38.49.212.111:1009/api/v1/phones/ranking"
 
     def create_phone_embed(self, phone: dict, last_updated: str):
         """Membangun Discord Embed untuk satu smartphone."""
@@ -43,7 +43,8 @@ class PhoneCog(commands.Cog):
         embed.add_field(name="🎮 GPU", value=f"3DMark Score: {scores.get('d3dmark', 0):,}", inline=True)
         embed.add_field(name="🔋 SoC", value=f"Nanoreview Score: {scores.get('nanoreview', 'N/A')}/100", inline=True)
         
-        price = phone.get('price_usd', 'N/A')
+        price_val = phone.get('price_usd')
+        price = f"{price_val:,}" if isinstance(price_val, (int, float)) else "N/A"
         kimovil = scores.get('kimovil', 'N/A')
         price_text = f"USD ${price} (Value Score: {kimovil}/10)"
         embed.add_field(name="💰 Harga Est.", value=price_text, inline=False)
