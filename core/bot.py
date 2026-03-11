@@ -24,11 +24,7 @@ class OasisBot(commands.Bot):
 
     async def on_ready(self):
         if not self._synced:
-            # Hapus global commands lama agar tidak duplikat
-            self.tree.clear_commands(guild=None)
-            await self.tree.sync()
-
-            # Sync ke setiap guild (instan)
+            # Step 1: Copy command dari global tree ke setiap guild, lalu sync (instan)
             for guild in self.guilds:
                 try:
                     self.tree.copy_global_to(guild=guild)
@@ -36,6 +32,11 @@ class OasisBot(commands.Bot):
                     logger.info(f"Synced {len(synced)} commands to {guild.name}")
                 except Exception as e:
                     logger.error(f"Failed to sync to {guild.name}: {e}")
+
+            # Step 2: Hapus global commands dari Discord agar tidak duplikat
+            # (semua command sudah live di guild level)
+            self.tree.clear_commands(guild=None)
+            await self.tree.sync()
 
             self._synced = True
 
