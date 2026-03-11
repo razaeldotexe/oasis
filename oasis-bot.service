@@ -1,0 +1,15 @@
+[Unit]
+Description=Oasis Discord Bot
+After=network.target
+
+[Service]
+Type=simple
+User=administrator
+WorkingDirectory=/home/administrator/oasis
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+RestartSec=5
+EnvironmentFile=/home/administrator/oasis/.env
+
+[Install]
+WantedBy=multi-user.target

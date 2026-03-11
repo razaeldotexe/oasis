@@ -108,5 +108,34 @@ class PhoneCog(commands.Cog):
             logger.error(f"Error in /best-phone: {e}")
             await interaction.edit_original_response(content="⚠️ Gagal mengambil data. Coba lagi beberapa saat.")
 
+    @app_commands.command(name="phone-refresh", description="Trigger manual pembaruan cache ranking smartphone di server API.")
+    async def best_phone_refresh(self, interaction: discord.Interaction):
+        if not self.api_key:
+            await interaction.response.send_message("⚠️ API Key tidak ditemukan. Hubungi admin bot.", ephemeral=True)
+            return
+
+        await interaction.response.defer(ephemeral=True)
+
+        try:
+            refresh_url = f"{self.api_url.replace('/ranking', '/refresh')}"
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                headers = {"X-API-Key": self.api_key}
+                response = await client.post(refresh_url, headers=headers)
+
+                if response.status_code == 200:
+                    data = response.json()
+                    message = data.get("message", "Cache berhasil diperbarui.")
+                    await interaction.followup.send(f"✅ **Sukses:** {message}", ephemeral=True)
+                elif response.status_code == 403:
+                    await interaction.followup.send("⚠️ **Gagal:** API Key tidak memiliki izin untuk refresh.", ephemeral=True)
+                else:
+                    await interaction.followup.send(f"⚠️ **Gagal:** Server mengembalikan error {response.status_code}.", ephemeral=True)
+
+        except httpx.TimeoutException:
+            await interaction.followup.send("⚠️ **Timeout:** Proses refresh memakan waktu terlalu lama. Coba cek beberapa saat lagi.", ephemeral=True)
+        except Exception as e:
+            logger.error(f"Error in /phone-refresh: {e}")
+            await interaction.followup.send("⚠️ **Error:** Terjadi kesalahan saat mencoba merefresh data.", ephemeral=True)
+
 async def setup(bot: commands.Bot):
     await bot.add_cog(PhoneCog(bot))
