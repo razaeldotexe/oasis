@@ -29,8 +29,9 @@ class OasisBot(commands.Bot):
 
         await init_db()
 
-        # Memuat cogs secara otomatis
-        for filename in os.listdir('./cogs'):
+        # Memuat cogs secara otomatis menggunakan path absolut
+        cogs_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../cogs'))
+        for filename in os.listdir(cogs_path):
             if filename.endswith('.py'):
                 cog_name = f'cogs.{filename[:-3]}'
                 if cog_name not in self.extensions:

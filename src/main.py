@@ -23,16 +23,23 @@ if __name__ == "__main__":
             [task.cancel() for task in tasks]
             logger.info("Membatalkan task yang tersisa...")
             await asyncio.gather(*tasks, return_exceptions=True)
-            loop.stop()
+            # Jangan stop loop secara manual jika menggunakan runner standar atau loop mandiri
+            # loop.stop() 
 
-        loop = asyncio.get_event_loop()
-        for sig in (signal.SIGTERM, signal.SIGINT):
-            loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s, loop)))
+        async def main():
+            loop = asyncio.get_running_loop()
+            for sig in (signal.SIGTERM, signal.SIGINT):
+                loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s, loop)))
+
+            try:
+                logger.info("Starting Oasis Bot...")
+                await bot.start(TOKEN, reconnect=True)
+            except Exception as e:
+                logger.error(f"Terjadi kesalahan saat menjalankan bot: {e}")
+            finally:
+                logger.info("Bot dimatikan.")
 
         try:
-            logger.info("Starting Oasis Bot...")
-            bot.run(TOKEN, log_handler=None)
-        except Exception as e:
-            logger.error(f"Terjadi kesalahan saat menjalankan bot: {e}")
-        finally:
-            logger.info("Bot dimatikan.")
+            asyncio.run(main())
+        except KeyboardInterrupt:
+            pass
