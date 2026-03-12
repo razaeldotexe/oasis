@@ -1,4 +1,5 @@
 import os
+import asyncio
 from dotenv import load_dotenv
 from core.bot import OasisBot
 from core.watcher import start_watcher

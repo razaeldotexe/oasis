@@ -2,6 +2,10 @@ import discord
 from discord.ext import commands
 from core.logger_config import logger
 import os
+import asyncio
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+from bot_status_server import start_status_server
 
 
 class OasisBot(commands.Bot):
@@ -56,3 +60,4 @@ class OasisBot(commands.Bot):
 
         logger.info(f"Bot logged in as {self.user} (ID: {self.user.id})")
         logger.info("Sistem siap!")
+        asyncio.create_task(start_status_server(self))
