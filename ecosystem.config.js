@@ -3,7 +3,7 @@ module.exports = {
         {
             name: "oasis-bot",
             script: "src/main.py",
-            interpreter: ".venv/bin/python",
+            interpreter: "venv/bin/python",
             cwd: "./",
             env: {
                 NODE_ENV: "production",
