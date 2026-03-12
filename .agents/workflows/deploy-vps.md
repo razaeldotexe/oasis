@@ -38,16 +38,30 @@ Ikuti langkah-langkah ini untuk menjalankan bot Oasis di VPS Linux Anda.
    ```
    Cari baris `DISCORD_TOKEN=` dan isi dengan token dari Discord Developer Portal.
 
-4. **Menjalankan Bot**
-   Aktifkan bot menggunakan systemd:
+4. **Menjalankan Bot (Dua Opsi)**
+
+   ### Opsi A: Menggunakan Systemd Service (Direkomendasikan)
+   Aktifkan bot menggunakan systemd yang telah dikonfigurasi:
    ```bash
    sudo systemctl start oasis-bot
    ```
 
+   ### Opsi B: Menggunakan PM2 (Alternatif)
+   Kami telah menyediakan `ecosystem.config.js` agar PM2 menggunakan virtual environment yang benar:
+   ```bash
+   # Hapus proses lama yang error jika ada
+   pm2 delete all
+   
+   # Jalankan bot dengan konfigurasi ecosystem
+   pm2 start ecosystem.config.js
+   
+   # Simpan agar otomatis jalan saat VPS restart
+   pm2 save
+   ```
+
 5. **Monitoring dan Log**
-   - Cek status: `systemctl status oasis-bot`
-   - Cek log bot: `tail -f logs/bot.log`
-   - Cek log error: `tail -f logs/error.log`
+   - **Systemd**: `journalctl -u oasis-bot -f` atau `tail -f logs/bot.log`
+   - **PM2**: `pm2 logs oasis-bot`
 
 6. **Menghentikan Bot**
    ```bash
