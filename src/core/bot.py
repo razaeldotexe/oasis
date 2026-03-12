@@ -3,15 +3,29 @@ from discord.ext import commands
 from core.logger_config import logger
 import os
 
+
 class OasisBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
+        intents.members = True
         super().__init__(command_prefix="!", intents=intents)
         self._synced = False
 
     async def setup_hook(self):
-        # Memuat Cogs secara otomatis
+        # Registrasi persistent views untuk ticket system
+        from views.ticket_button import TicketPanelView
+        from views.ticket_controls import TicketControlsView
+
+        self.add_view(TicketPanelView())
+        self.add_view(TicketControlsView())
+
+        # Inisialisasi database tiket
+        from utils.db import init_db
+
+        await init_db()
+
+        # Memuat cogs secara otomatis
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
                 cog_name = f'cogs.{filename[:-3]}'
@@ -42,5 +56,3 @@ class OasisBot(commands.Bot):
 
         logger.info(f"Bot logged in as {self.user} (ID: {self.user.id})")
         logger.info("Sistem siap!")
-
-
