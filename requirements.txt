@@ -12,3 +12,4 @@ aiohttp>=3.9.0
 deep-translator
 aiosqlite
 chat-exporter
+psutil
